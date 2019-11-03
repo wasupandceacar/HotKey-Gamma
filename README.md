@@ -1,2 +1,7 @@
 # Hotkey-Gamma
- adjust gamma by hotkey
+
+Adjust gamma by hotkey
+
+Press ] to increase gamma
+
+Press [ to decrease gamma
