@@ -1,7 +1,0 @@
-运行hotkey.py
-python hotkey.py
-
-需要的库：pywin32
-pip install pywin32
-
-左方括号减小gamma，右方括号增大gamma
