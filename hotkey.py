@@ -42,17 +42,17 @@ if __name__ == '__main__':
     hotkey = Hotkey()
     hotkey.start()
 
-    g, b = initGamma()
+    g, gamma = initGamma()
 
     while True:
         if GAMMAUP == True:
             print("gamma up")
-            b = min(255, b + 8)
-            adjustGamma(g, b)
+            gamma = max(-1, gamma - 0.05)
+            adjustGamma(g, gamma)
             GAMMAUP = False
         elif GAMMADOWN == True:
             print("gamma down")
-            b = max(0, b - 8)
-            adjustGamma(g, b)
+            gamma = min(1, gamma + 0.05)
+            adjustGamma(g, gamma)
             GAMMADOWN = False
 

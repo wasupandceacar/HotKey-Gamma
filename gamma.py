@@ -9,17 +9,21 @@ class gamma(Structure):
         ("blue", c_ushort * 256)
     ]
 
-def initGamma():
+def getGamma():
     g = gamma()
     GDI32.GetDeviceGammaRamp(HDC, byref(g))
-    # 初始亮度设为128
-    b = 128
-    adjustGamma(g, b)
-    return g, b
+    return g
 
-def adjustGamma(g, brightness):
+def initGamma():
+    g = getGamma()
+    # 初始gamma设为0
+    gamma = 0
+    adjustGamma(g, gamma)
+    return g, gamma
+
+def adjustGamma(g, gamma):
     # 调节gamma
     for i in range(256):
-        val = min(65535, (128 + brightness) * i)
+        val = int(min(65535, max(0, (i / 256.0)**(4**gamma) * 65535 + 0.5)))
         g.red[i] = g.green[i] = g.blue[i] = val
     GDI32.SetDeviceGammaRamp(HDC, byref(g))
