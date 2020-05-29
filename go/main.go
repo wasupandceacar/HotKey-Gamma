@@ -5,14 +5,27 @@ import (
 	"github.com/MakeNowJust/hotkey"
 	"log"
 	"math"
-	//"os"
-	//"os/signal"
-	//"syscall"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 var hkey = hotkey.New()
 
-func registerDownandUp(downkey int, upkey int, g *Gamma, gamma float64) (iddown hotkey.Id, idup hotkey.Id) {
+var hkeyset = hotkey.New()
+
+var downkey = 0
+var upkey = 0
+var setkey = 0
+var configDic = ""
+
+var iddown hotkey.Id = -1
+var idup hotkey.Id = -1
+
+var g *Gamma
+var gamma float64
+
+func registerFunction() {
 	iddown, _ = hkey.Register(hotkey.None, uint32(downkey), func() {
 		gamma = math.Min(1, gamma + 0.05)
 		log.Println("gamma down, current gamma:", fmt.Sprintf("%.2f", -gamma))
@@ -24,10 +37,27 @@ func registerDownandUp(downkey int, upkey int, g *Gamma, gamma float64) (iddown 
 		log.Println("gamma up, current gamma:", fmt.Sprintf("%.2f", -gamma))
 		adjustGamma(g, gamma)
 	})
-	return iddown, idup
 }
 
-func unregisterDownandUp(iddown hotkey.Id, idup hotkey.Id) {
+func registerSet() {
+	_, _ = hkeyset.Register(hotkey.None, uint32(setkey), func() {
+		log.Println("Unregister functions. down:", downkey, "up:", upkey)
+		unregisterFunction()
+
+		log.Println("Press your gamma down key:")
+		downkey = readSingleKey()
+
+		log.Println("Press your gamma up key:")
+		upkey = readSingleKey()
+
+		writeConfig(configDic, downkey, upkey, setkey)
+
+		log.Println("Register functions. down:", downkey, "up:", upkey)
+		registerFunction()
+	})
+}
+
+func unregisterFunction() {
 	hkey.Unregister(iddown)
 	hkey.Unregister(idup)
 }
@@ -53,31 +83,29 @@ func readSingleKey() int {
 }
 
 func main(){
-	readSingleKey()
+	downkey, upkey, setkey, configDic = checkConfig()
 
-	//downkey, upkey := checkConfig()
-	//
-	//c := make(chan os.Signal)
-	//signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
-	//
-	//fmt.Println("Made by wasupandceacar")
-	//fmt.Println("=======================================================")
-	//fmt.Println("Guide:")
-	//fmt.Println("Press ](init) to increase gamma (max value: 1)")
-	//fmt.Println("Press [(init) to decrease gamma (min value: -1)")
-	//fmt.Println("Press Ctrl+C to exit, and gamma will return to standard (value: 0)")
-	//fmt.Println("Don't click close button to exit, gamma will not return back")
-	//fmt.Println("If you accidentally do so, just restart and it will set gamma to standard initially")
-	//fmt.Println("=======================================================")
-	//
-	//getGammaFunc()
-	//getHDC()
-	//g, gamma := initGamma()
-	//
-	//iddown, idup := registerDownandUp(downkey, upkey, g, gamma)
-	//
-	//unregisterDownandUp(iddown, idup)
-	//
-	//<-c
-	//adjustGamma(g, -0.0)
+	c := make(chan os.Signal)
+	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+
+	fmt.Println("Made by wasupandceacar")
+	fmt.Println("=======================================================")
+	fmt.Println("Guide:")
+	fmt.Println("Press [(init) to decrease gamma (min value: -1)")
+	fmt.Println("Press ](init) to increase gamma (max value: 1)")
+	fmt.Println("Press Space(init) to reset gamma down and up key")
+	fmt.Println("Press Ctrl+C to exit, and gamma will return to standard (value: 0)")
+	fmt.Println("Don't click close button to exit, gamma will not return back")
+	fmt.Println("If you accidentally do so, just restart and it will set gamma to standard initially")
+	fmt.Println("=======================================================")
+
+	getGammaFunc()
+	getHDC()
+	g, gamma = initGamma()
+
+	registerSet()
+	registerFunction()
+
+	<-c
+	adjustGamma(g, -0.0)
 }
