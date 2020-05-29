@@ -6,4 +6,4 @@ Press ] to increase gamma
 
 Press [ to decrease gamma
 
-Press Space to reset gamma down and up key
+Press Enter to reset gamma down and up key

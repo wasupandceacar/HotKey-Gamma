@@ -93,7 +93,7 @@ func main(){
 	fmt.Println("Guide:")
 	fmt.Println("Press [(init) to decrease gamma (min value: -1)")
 	fmt.Println("Press ](init) to increase gamma (max value: 1)")
-	fmt.Println("Press Space(init) to reset gamma down and up key")
+	fmt.Println("Press Enter(init) to reset gamma down and up key")
 	fmt.Println("Press Ctrl+C to exit, and gamma will return to standard (value: 0)")
 	fmt.Println("Don't click close button to exit, gamma will not return back")
 	fmt.Println("If you accidentally do so, just restart and it will set gamma to standard initially")

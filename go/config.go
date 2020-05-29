@@ -20,7 +20,7 @@ func isExist(fileAddr string)(bool){
 func createInitConfig(configDic string) {
 	file, _ := os.OpenFile(configDic, os.O_CREATE|os.O_WRONLY, 0666)
 	defer file.Close()
-	_, err := file.WriteString("[Key]\ndown: 219\nup: 221\nset: 32\n")
+	_, err := file.WriteString("[Key]\ndown: 219\nup: 221\nset: 13\n")
 	if err != nil {
 		panic(err)
 	}
